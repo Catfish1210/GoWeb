@@ -12,35 +12,49 @@
             </div>
         </div>
         <div id="buttonContainer">
-            <button type="button" onclick="displayValue('AC')">AC</button>
-            <button type="button" onclick="displayValue('<-')">←</button>
-            <button type="button" onclick="displayValue('%')">%</button>
-            <button type="button" onclick="displayValue('÷')">÷</button>
-            <button type="button" onclick="displayValue('7')">7</button>
-            <button type="button" onclick="displayValue('8')">8</button>
-            <button type="button" onclick="displayValue('9')">9 </button>
-            <button type="button" onclick="displayValue('x')">x</button>
-            <button type="button" onclick="displayValue('4')">4</button>
-            <button type="button" onclick="displayValue('5')">5</button>
-            <button type="button" onclick="displayValue('6')">6</button>
-            <button type="button" onclick="displayValue('-')">-</button>
-            <button type="button" onclick="displayValue('1')">1</button>
-            <button type="button" onclick="displayValue('2')">2</button>
-            <button type="button" onclick="displayValue('3')">3</button>
-            <button type="button" onclick="displayValue('+')">+</button>
-            <button type="button" onclick="displayValue('EG')">EG</button>
-            <button type="button" onclick="displayValue('0')">0</button>
-            <button type="button" onclick="displayValue('.')">.</button>
-            <button type="button" onclick="displayValue('=')">=</button>
+            <button type="button" onclick="clearValue('AC')">AC</button>
+            <button type="button" onclick="storeValue('<-')">←</button>
+            <button type="button" onclick="storeValue('%')">%</button>
+            <button type="button" onclick="storeValue('÷')">÷</button>
+            <button type="button" onclick="storeValue('7')">7</button>
+            <button type="button" onclick="storeValue('8')">8</button>
+            <button type="button" onclick="storeValue('9')">9 </button>
+            <button type="button" onclick="storeValue('x')">x</button>
+            <button type="button" onclick="storeValue('4')">4</button>
+            <button type="button" onclick="storeValue('5')">5</button>
+            <button type="button" onclick="storeValue('6')">6</button>
+            <button type="button" onclick="storeValue('-')">-</button>
+            <button type="button" onclick="storeValue('1')">1</button>
+            <button type="button" onclick="storeValue('2')">2</button>
+            <button type="button" onclick="storeValue('3')">3</button>
+            <button type="button" onclick="storeValue('+')">+</button>
+            <button type="button" onclick="storeValue('EG')">EG</button>
+            <button type="button" onclick="storeValue('0')">0</button>
+            <button type="button" onclick="storeValue('.')">.</button>
+            <button type="button" onclick="getResult('=')">=</button>
 
 
         </div>
 
     </div>
     <script>
-        function displayValue(value) {
+        function storeValue(value) {
             const messageArea = document.getElementById("messageArea");
-            messageArea.textContent = value;
+            messageArea.textContent += value;
+        }
+        
+        function clearValue(value) {
+            messageArea.textContent = "";
+        }
+
+        function getResult() {
+            const messageArea = document.getElementById("messageArea");
+            const result = messageArea.textContent;
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/submit", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("result=" + result);
         }
     </script>
 </body>

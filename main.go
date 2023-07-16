@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 )
 
@@ -13,44 +12,23 @@ type PageData struct {
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
+			// Handle the POST request from JavaScript (getResult function)
 			r.ParseForm()
-			name := r.Form.Get("name")
+			result := r.Form.Get("result")
 
-			data := PageData{Message: "Button Clicked: " + name}
+			fmt.Println("Calculator Result: " + result)
 
-			tmpl, err := template.ParseFiles("index.html")
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			err = tmpl.Execute(w, data)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
+			// Respond with a success status code (200 OK) to the AJAX request.
+			w.WriteHeader(http.StatusOK)
 		} else if r.URL.Path == "/favicon.ico" {
+			// Handle the request for favicon.ico
 			w.Header().Set("Content-Type", "image/x-icon")
 			w.WriteHeader(http.StatusOK)
 		} else {
-			if r.URL.Path == "/styles.css" {
-				http.ServeFile(w, r, "styles.css")
-			} else {
-				http.ServeFile(w, r, "index.html")
-			}
+			// Serve the initial HTML page for all other requests
+			http.ServeFile(w, r, "index.html")
 		}
 	})
-	http.HandleFunc("/submit", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
-			r.ParseForm()
-			name := r.Form.Get("name")
 
-			fmt.Println("Button Clicked: " + name)
-
-			w.WriteHeader(http.StatusOK)
-		} else {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		}
-	})
 	http.ListenAndServe(":8080", nil)
 }
