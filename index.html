@@ -1,17 +1,45 @@
 <!DOCTYPE html>
-
-
-
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Form</title>
+    <title>Number Buttons</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form action="/submit" method="post" enctype="application/x-www-form-urlencoded">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        <input type="submit" value="Submit">
-    </form>
+    <div class="container">
+        <div id="buttonContainer">
+            <button type="button" onclick="displayValue('AC')">AC</button>
+            <button type="button" onclick="displayValue('<-')">←</button>
+            <button type="button" onclick="displayValue('%')">%</button>
+            <button type="button" onclick="displayValue('÷')">÷</button>
+            <button type="button" onclick="displayValue('7')">7</button>
+            <button type="button" onclick="displayValue('8')">8</button>
+            <button type="button" onclick="displayValue('9')">9 </button>
+            <button type="button" onclick="displayValue('x')">x</button>
+            <button type="button" onclick="displayValue('4')">4</button>
+            <button type="button" onclick="displayValue('5')">5</button>
+            <button type="button" onclick="displayValue('6')">6</button>
+            <button type="button" onclick="displayValue('-')">-</button>
+            <button type="button" onclick="displayValue('1')">1</button>
+            <button type="button" onclick="displayValue('2')">2</button>
+            <button type="button" onclick="displayValue('3')">3</button>
+            <button type="button" onclick="displayValue('+')">+</button>
+            <button type="button" onclick="displayValue('EG')">EG</button>
+            <button type="button" onclick="displayValue('0')">0</button>
+            <button type="button" onclick="displayValue('.')">.</button>
+            <button type="button" onclick="displayValue('=')">=</button>
+
+
+        </div>
+
+        <div id="messageArea">
+        </div>
+    </div>
+    <script>
+        function displayValue(value) {
+            const messageArea = document.getElementById("messageArea");
+            messageArea.textContent = "Button Clicked: " + value;
+        }
+    </script>
 </body>
 </html>

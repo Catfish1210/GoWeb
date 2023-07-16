@@ -1,20 +1,43 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
 )
 
+type PageData struct {
+	Message string
+}
+
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html")
-		http.ServeFile(w, r, "index.html")
-	})
+		if r.Method == http.MethodPost {
+			r.ParseForm()
+			name := r.Form.Get("name")
 
-	http.HandleFunc("/submit", func(w http.ResponseWriter, r *http.Request) {
-		name := r.FormValue("name")
-		fmt.Println("Submitted name:", name)
-		w.Write([]byte("Hello, " + name + "!"))
+			data := PageData{Message: "Button Clicked: " + name}
+
+			tmpl, err := template.ParseFiles("index.html")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			err = tmpl.Execute(w, data)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		} else if r.URL.Path == "/favicon.ico" {
+			w.Header().Set("Content-Type", "image/x-icon")
+			w.WriteHeader(http.StatusOK)
+		} else {
+			if r.URL.Path == "/styles.css" {
+				http.ServeFile(w, r, "styles.css")
+			} else {
+				http.ServeFile(w, r, "index.html")
+			}
+		}
 	})
 
 	http.ListenAndServe(":8080", nil)
