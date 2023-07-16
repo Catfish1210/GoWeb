@@ -23,7 +23,11 @@ func main() {
 		} else if r.URL.Path == "/favicon.ico" {
 			// Handle the request for favicon.ico
 			w.Header().Set("Content-Type", "image/x-icon")
-			w.WriteHeader(http.StatusOK)
+			http.ServeFile(w, r, "favicon.ico")
+		} else if r.URL.Path == "/styles.css" {
+			// Handle the request for styles.css
+			w.Header().Set("Content-Type", "text/css")
+			http.ServeFile(w, r, "styles.css")
 		} else {
 			// Serve the initial HTML page for all other requests
 			http.ServeFile(w, r, "index.html")
