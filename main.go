@@ -15,24 +15,40 @@ func main() {
 			// Handle the POST request from JavaScript (getResult function)
 			r.ParseForm()
 			result := r.Form.Get("result")
-
-			fmt.Println("Calculator Result: " + result)
-
-			// Respond with a success status code (200 OK) to the AJAX request.
+			fmt.Println("Before Calculator Result: " + result)
+			fmt.Println("After Calculator Result: ", calculateResult(result))
 			w.WriteHeader(http.StatusOK)
 		} else if r.URL.Path == "/favicon.ico" {
-			// Handle the request for favicon.ico
 			w.Header().Set("Content-Type", "image/x-icon")
 			http.ServeFile(w, r, "favicon.ico")
 		} else if r.URL.Path == "/styles.css" {
-			// Handle the request for styles.css
 			w.Header().Set("Content-Type", "text/css")
 			http.ServeFile(w, r, "styles.css")
 		} else {
-			// Serve the initial HTML page for all other requests
 			http.ServeFile(w, r, "index.html")
 		}
 	})
 
 	http.ListenAndServe(":8080", nil)
+}
+
+func calculateResult(input string) []string {
+	var operatorIndex []int
+	var values []string
+	for i, char := range input {
+		if char < '0' || char > '9' {
+			operatorIndex = append(operatorIndex, i)
+			value := input[:i]
+			values = saveValue(values, value)
+		}
+
+	}
+	// values := make([]int, len(operatorIndex)+1)
+
+	return values
+
+}
+
+func saveValue(values []string, value string) []string {
+	return append(values, value)
 }

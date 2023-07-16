@@ -38,6 +38,7 @@
 
     </div>
     <script>
+        messageArea.textContent = "";
         function storeValue(value) {
             const messageArea = document.getElementById("messageArea");
             messageArea.textContent += value;
@@ -50,11 +51,11 @@
         function getResult() {
             const messageArea = document.getElementById("messageArea");
             const result = messageArea.textContent;
-            
+            const encodedResult = encodeURIComponent(result);
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/submit", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send("result=" + result);
+            xhr.send("result=" + encodedResult);
         }
     </script>
 </body>
