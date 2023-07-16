@@ -7,6 +7,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="calcdisplay">
+            <div id="messageArea">
+            </div>
+        </div>
         <div id="buttonContainer">
             <button type="button" onclick="displayValue('AC')">AC</button>
             <button type="button" onclick="displayValue('<-')">←</button>
@@ -32,13 +36,11 @@
 
         </div>
 
-        <div id="messageArea">
-        </div>
     </div>
     <script>
         function displayValue(value) {
             const messageArea = document.getElementById("messageArea");
-            messageArea.textContent = "Button Clicked: " + value;
+            messageArea.textContent = value;
         }
     </script>
 </body>
