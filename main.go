@@ -16,7 +16,8 @@ func main() {
 			r.ParseForm()
 			result := r.Form.Get("result")
 			fmt.Println("Before Calculator Result: " + result)
-			fmt.Println("After Calculator Result: ", calculateResult(result))
+			calculateResult(result)
+			// fmt.Println("After Calculator Result: ", calculateResult(result))
 			w.WriteHeader(http.StatusOK)
 		} else if r.URL.Path == "/favicon.ico" {
 			w.Header().Set("Content-Type", "image/x-icon")
@@ -32,43 +33,79 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func calculateResult(input string) []string {
-	var operatorIndex []int
-	// var values []string
+func calculateResult(input string) {
+	var num string
+	var numSlice []string
+	operatorMap := map[string][]int{
+		"+": {},
+		"-": {},
+		"÷": {},
+		"%": {},
+		"x": {},
+	}
+
 	for i, char := range input {
-		if char < '0' || char > '9' {
-			operatorIndex = append(operatorIndex, i)
-			// value := input[:i]
-			// values = saveValue(values, value)
-		}
+		fmt.Println("Iteration: ", i, "On char: ", string(char))
 
+		if isOperator(char) {
+			fmt.Println("-isOperator: True", string(char))
+			switch string(char) {
+			case "+":
+				operatorMap["+"] = append(operatorMap["+"], i)
+			case "-":
+				operatorMap["-"] = append(operatorMap["-"], i)
+			case "÷":
+				operatorMap["÷"] = append(operatorMap["÷"], i)
+			case "%":
+				operatorMap["%"] = append(operatorMap["%"], i)
+			case "x":
+				operatorMap["x"] = append(operatorMap["x"], i)
+			default:
+				fmt.Println("Invalid operator")
+			}
+
+			numSlice = append(numSlice, num)
+			num = ""
+		} else {
+			num += string(char)
+			if i == len(input)-1 {
+				numSlice = append(numSlice, num)
+			}
+		}
+		fmt.Println("--Num string at end of for loop: ", num)
+		fmt.Println("--NumSlice string at end of for loop: ", numSlice)
 	}
-	// values := make([]int, len(operatorIndex)+1)
-	return getValues(input, operatorIndex)
-	// return operatorIndex
+
+	fmt.Println("Num slice: ", numSlice)
+	fmt.Println("Operator map: ", operatorMap)
+
+	Calculate(AtoiSlice(numSlice), operatorMap)
 
 }
 
-func getValues(input string, opIndex []int) []string {
-	var values []string
-	// count := len(opIndex)
-	for i, v := range opIndex {
-
-		if i == 0 && len(opIndex) == 1 {
-			values = append(values, input[:v], input[v-1:])
-			break
-		}
-
-		if i == 0 || i < len(opIndex)-1 {
-			values = append(values, input[:v])
-		}
-		if i == len(opIndex)-1 {
-			values = append(values, input[:v])
-		}
-	}
-	return values
+func Calculate(numSlice []int, operatorMap map[string][]int) {
 }
 
-func saveValue(values []string, value string) []string {
-	return append(values, value)
+func AtoiSlice(numSlice []string) []int {
+	var sliceInt []int
+
+	for _, number := range numSlice {
+		res := 0
+		for _, ch := range number {
+			digit := int(ch - '0')
+			res = res*10 + digit
+		}
+		sliceInt = append(sliceInt, res)
+	}
+
+	return sliceInt
+}
+
+func isOperator(char rune) bool {
+	opCheck := string(char)
+	if opCheck == "+" || opCheck == "-" || opCheck == "÷" || opCheck == "%" || opCheck == "x" {
+		return true
+	} else {
+		return false
+	}
 }
