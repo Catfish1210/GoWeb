@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"unicode"
 )
 
 type PageData struct {
@@ -34,56 +36,104 @@ func main() {
 }
 
 func calculateResult(input string) {
-	var num string
-	var numSlice []string
-	operatorMap := map[string][]int{
-		"+": {},
-		"-": {},
-		"÷": {},
-		"%": {},
-		"x": {},
-	}
+	fmt.Println(Calculate(input))
+	// var num string
+	// var numSlice []string
+	// operatorMap := map[string][]int{
+	// 	"+": {},
+	// 	"-": {},
+	// 	"÷": {},
+	// 	"%": {},
+	// 	"x": {},
+	// }
 
-	for i, char := range input {
-		fmt.Println("Iteration: ", i, "On char: ", string(char))
+	// for i, char := range input {
+	// 	fmt.Println("Iteration: ", i, "On char: ", string(char))
 
-		if isOperator(char) {
-			fmt.Println("-isOperator: True", string(char))
-			switch string(char) {
-			case "+":
-				operatorMap["+"] = append(operatorMap["+"], i)
-			case "-":
-				operatorMap["-"] = append(operatorMap["-"], i)
-			case "÷":
-				operatorMap["÷"] = append(operatorMap["÷"], i)
-			case "%":
-				operatorMap["%"] = append(operatorMap["%"], i)
-			case "x":
-				operatorMap["x"] = append(operatorMap["x"], i)
-			default:
-				fmt.Println("Invalid operator")
-			}
+	// 	if isOperator(char) {
+	// 		fmt.Println("-isOperator: True", string(char))
+	// 		switch string(char) {
+	// 		case "+":
+	// 			operatorMap["+"] = append(operatorMap["+"], i)
+	// 		case "-":
+	// 			operatorMap["-"] = append(operatorMap["-"], i)
+	// 		case "÷":
+	// 			operatorMap["÷"] = append(operatorMap["÷"], i)
+	// 		case "%":
+	// 			operatorMap["%"] = append(operatorMap["%"], i)
+	// 		case "x":
+	// 			operatorMap["x"] = append(operatorMap["x"], i)
+	// 		default:
+	// 			fmt.Println("Invalid operator")
+	// 		}
 
-			numSlice = append(numSlice, num)
-			num = ""
-		} else {
-			num += string(char)
-			if i == len(input)-1 {
-				numSlice = append(numSlice, num)
-			}
-		}
-		fmt.Println("--Num string at end of for loop: ", num)
-		fmt.Println("--NumSlice string at end of for loop: ", numSlice)
-	}
+	// 		numSlice = append(numSlice, num)
+	// 		num = ""
+	// 	} else {
+	// 		num += string(char)
+	// 		if i == len(input)-1 {
+	// 			numSlice = append(numSlice, num)
+	// 		}
+	// 	}
+	// 	fmt.Println("--Num string at end of for loop: ", num)
+	// 	fmt.Println("--NumSlice string at end of for loop: ", numSlice)
+	// }
 
-	fmt.Println("Num slice: ", numSlice)
-	fmt.Println("Operator map: ", operatorMap)
+	// fmt.Println("Num slice: ", numSlice)
+	// fmt.Println("Operator map: ", operatorMap)
 
-	Calculate(AtoiSlice(numSlice), operatorMap)
+	// Calculate(AtoiSlice(numSlice), operatorMap)
 
 }
 
-func Calculate(numSlice []int, operatorMap map[string][]int) {
+func Calculate(expression string) int {
+	var num int
+	var operator = '+'
+	var result int
+	var total int
+
+	for _, char := range expression {
+		if unicode.IsDigit(char) {
+			digit, _ := strconv.Atoi(string(char))
+			num = num*10 + digit
+		} else if isOperator(char) {
+
+			result = applyOperation(result, operator, num)
+			total += result
+			num = 0
+			operator = char
+		} else {
+			return 0
+		}
+	}
+	result = applyOperation(result, operator, num)
+
+	total += result
+	return total
+}
+
+func applyOperation(currentResult int, operator rune, num int) int {
+	switch operator {
+	case '+':
+		return currentResult + num
+	case '-':
+		return currentResult - num
+	case 'x':
+		return currentResult * num
+	case '÷':
+		return currentResult / num
+	default:
+		return num
+	}
+}
+
+func isOperator(char rune) bool {
+	opCheck := string(char)
+	if opCheck == "+" || opCheck == "-" || opCheck == "÷" || opCheck == "%" || opCheck == "x" {
+		return true
+	} else {
+		return false
+	}
 }
 
 func AtoiSlice(numSlice []string) []int {
@@ -99,13 +149,4 @@ func AtoiSlice(numSlice []string) []int {
 	}
 
 	return sliceInt
-}
-
-func isOperator(char rune) bool {
-	opCheck := string(char)
-	if opCheck == "+" || opCheck == "-" || opCheck == "÷" || opCheck == "%" || opCheck == "x" {
-		return true
-	} else {
-		return false
-	}
 }
